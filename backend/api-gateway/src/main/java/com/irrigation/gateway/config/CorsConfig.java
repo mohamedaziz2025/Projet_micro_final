@@ -21,7 +21,8 @@ public class CorsConfig {
         corsConfig.setAllowedOrigins(Arrays.asList(
             "http://localhost:4200",
             "http://51.44.160.155",
-            "http://51.44.160.155:80"
+            "http://51.44.160.155:80",
+            "http://51.44.160.155:4200"
         ));
         corsConfig.setMaxAge(3600L);
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
