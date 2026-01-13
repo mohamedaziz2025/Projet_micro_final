@@ -4,14 +4,14 @@ server:
 spring:
   application:
     name: config-server
-  profiles:
-    active: native
   cloud:
     config:
       enabled: false
       server:
-        native:
-          search-locations: file:/app/config-repo
+        git:
+          uri: https://gitlab.com/azizbenhassine270/config-repo.git
+          default-label: main
+          clone-on-start: true
 
 management:
   endpoints:
