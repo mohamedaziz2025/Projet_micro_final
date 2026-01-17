@@ -113,96 +113,6 @@ docker-compose down      # Arrêter et supprimer
 
 ---
 
-## 📚 Documentation Complète
-
-Pour plus de détails : **[DESCRIPTION_COMPLETE_PROJET.txt](DESCRIPTION_COMPLETE_PROJET.txt)**
-
----
-
-## 📝 Licence
-
-Projet académique
-│
-├── backend/                                    # Services Backend
-│   ├── config-server/                          # Configuration centralisée
-│   │   ├── src/main/java/com/irrigation/config/
-│   │   ├── src/main/resources/application.yml
-│   │   ├── Dockerfile
-│   │   └── pom.xml
-│   │
-│   ├── eureka-server/                          # Service Discovery
-│   │   ├── src/main/java/com/irrigation/eureka/
-│   │   ├── src/main/resources/application.yml
-│   │   ├── Dockerfile
-│   │   └── pom.xml
-│   │
-│   ├── api-gateway/                            # API Gateway
-│   │   ├── src/main/java/com/irrigation/gateway/
-│   │   │   └── config/                         # Configuration CORS, routes
-│   │   ├── src/main/resources/application.yml
-│   │   ├── Dockerfile
-│   │   └── pom.xml
-│   │
-│   ├── microservice-collecte/                  # Gestion capteurs & observations
-│   │   ├── src/main/java/com/irrigation/collecte/
-│   │   │   ├── controller/                     # API REST Controllers
-│   │   │   ├── service/                        # Logique métier + Kafka Producer
-│   │   │   ├── repository/                     # Accès données JPA
-│   │   │   ├── model/                          # Entités JPA
-│   │   │   └── dto/                            # Data Transfer Objects
-│   │   ├── src/main/resources/application.yml
-│   │   ├── Dockerfile
-│   │   └── pom.xml
-│   │
-│   └── microservice-analyse/                   # Analyse & recommandations
-│       ├── src/main/java/com/irrigation/analyse/
-│       │   ├── controller/                     # API REST Controllers
-│       │   ├── service/                        # Logique métier + Kafka Consumer
-│       │   ├── repository/                     # Accès données JPA
-│       │   ├── model/                          # Entités JPA
-│       │   ├── dto/                            # Data Transfer Objects
-│       │   └── client/                         # Feign Clients
-│       ├── src/main/resources/application.yml
-│       ├── Dockerfile
-│       └── pom.xml
-│
-├── frontend/                                   # Application Angular
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── components/
-│   │   │   │   ├── dashboard/                  # Tableau de bord
-│   │   │   │   ├── capteurs/                   # Gestion capteurs
-│   │   │   │   ├── observations/               # Historique observations
-│   │   │   │   └── recommandations/            # Liste recommandations
-│   │   │   ├── models/                         # Modèles TypeScript
-│   │   │   ├── services/                       # Services HTTP
-│   │   │   ├── app.component.ts
-│   │   │   ├── app.routes.ts
-│   │   │   └── app.config.ts
-│   │   ├── environments/                       # Configuration environnements
-│   │   ├── index.html
-│   │   └── main.ts
-│   ├── angular.json
-│   ├── tsconfig.json
-│   ├── package.json
-│   ├── nginx.conf                              # Configuration Nginx
-│   └── Dockerfile
-│
-├── config-repo/                                # Configuration externalisée
-│   ├── application.yml                         # Configuration globale
-│   ├── config-server.yml
-│   ├── eureka-server.yml
-│   ├── api-gateway.yml
-│   ├── microservice-collecte.yml
-│   └── microservice-analyse.yml
-│
-├── docker-compose.yml                          # Orchestration Docker
-├── build-all.ps1                               # Script build Windows
-├── build-all.sh                                # Script build Linux/Mac
-├── README.md                                   # Ce fichier
-└── DESCRIPTION_COMPLETE_PROJET.txt             # Documentation détaillée
-```
-
 ### Description des Dossiers
 
 | Dossier | Description |
@@ -211,7 +121,7 @@ Projet académique
 | `frontend/` | Application Angular 17 avec composants et services |
 | `config-repo/` | Fichiers de configuration pour Config Server |
 | `docker/` | Scripts et configurations Docker additionnels |
-| `kubernetes/` | Manifestes K8s pour déploiement (optionnel) |
+
 
 ---
 
