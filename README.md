@@ -1,183 +1,127 @@
 # 🌾 Système d'Irrigation Intelligente
 
-> Application web complète basée sur une architecture microservices pour la gestion automatisée de l'irrigation agricole
-
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Angular](https://img.shields.io/badge/Angular-17-red.svg)](https://angular.io/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
-[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
-[![Kafka](https://img.shields.io/badge/Apache%20Kafka-7.5-black.svg)](https://kafka.apache.org/)
-
-## 📋 Table des matières
-
-- [Description du Projet](#-description-du-projet)
-- [Architecture](#-architecture)
-- [Technologies Utilisées](#-technologies-utilisées)
-- [Structure du Projet](#-structure-du-projet)
-- [Prérequis](#-prérequis)
-- [Installation et Exécution](#-installation-et-exécution)
-- [Utilisation](#-utilisation)
-- [Endpoints API](#-endpoints-api)
-- [Communication entre Services](#-communication-entre-services)
-- [Troubleshooting](#-troubleshooting)
-- [Documentation Complète](#-documentation-complète)
+Application web basée sur une architecture microservices pour la gestion automatisée de l'irrigation agricole.
 
 ---
 
 ## 📖 Description du Projet
 
-Le **Système d'Irrigation Intelligente** est une application web moderne qui optimise l'utilisation de l'eau en agriculture grâce à l'analyse de données environnementales collectées par des capteurs IoT.
+Le **Système d'Irrigation Intelligente** optimise l'utilisation de l'eau en agriculture grâce à l'analyse de données environnementales collectées par des capteurs IoT.
 
-### 🎯 Objectifs
+### Objectifs
 
-- **Collecte automatisée** des données environnementales (humidité du sol, température, pluviométrie)
-- **Analyse en temps réel** des mesures des capteurs
-- **Génération automatique** de recommandations d'irrigation personnalisées
-- **Optimisation** de la consommation d'eau basée sur des données réelles
-- **Interface utilisateur intuitive** pour la gestion et la visualisation des données
+- Collecte automatisée des données environnementales (humidité du sol, température, pluviométrie)
+- Analyse en temps réel des mesures des capteurs
+- Génération automatique de recommandations d'irrigation personnalisées
+- Optimisation de la consommation d'eau basée sur des données réelles
 
-### ✨ Fonctionnalités Principales
+### Architecture
 
-- 📊 **Tableau de bord** avec statistiques et vue d'ensemble
-- 🎛️ **Gestion des capteurs** IoT (création, modification, suppression)
-- 📈 **Historique des observations** avec filtres et recherche
-- 💧 **Recommandations d'irrigation intelligentes** générées automatiquement
-- 🔄 **Traitement asynchrone** des événements via Apache Kafka
-- 🔐 **Architecture sécurisée** avec API Gateway comme point d'entrée unique
-- ⚡ **Scalabilité horizontale** de chaque microservice
-- 🐳 **Conteneurisation complète** avec Docker
+L'application est composée de 7 services :
 
----
+**Infrastructure :**
+- **Config Server** (8888) - Configuration centralisée
+- **Eureka Server** (8761) - Service Discovery
+- **API Gateway** (8080) - Point d'entrée unique
+- **Kafka + Zookeeper** (9092, 2181) - Communication asynchrone
 
-## 🏗️ Architecture
+**Microservices :**
+- **Microservice Collecte** (8081) - Gestion capteurs et observations
+- **Microservice Analyse** (8082) - Génération des recommandations
 
-L'application utilise une **architecture microservices moderne** basée sur Spring Cloud et Netflix OSS.
-
-### Diagramme d'Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      FRONTEND ANGULAR                           │
-│                         Port 4200                               │
-└────────────────────────────┬────────────────────────────────────┘
-                             │ HTTP/REST
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                       API GATEWAY                               │
-│                         Port 8080                               │
-│            (Routage, Load Balancing, CORS)                      │
-└──────────────────┬────────────────────────┬─────────────────────┘
-                   │                        │
-         HTTP/REST │                        │ HTTP/REST
-                   ▼                        ▼
-     ┌─────────────────────┐    ┌─────────────────────┐
-     │ MICROSERVICE        │    │ MICROSERVICE        │
-     │   COLLECTE          │    │    ANALYSE          │
-     │   Port 8081         │    │   Port 8082         │
-     │                     │    │                     │
-     │ • Capteurs          │    │ • Recommandations   │
-     │ • Observations      │    │ • Analyse données   │
-     └──────┬──────────────┘    └──────────┬──────────┘
-            │                              │
-            │    Kafka (Asynchrone)        │
-            └───────────►──────────────────┘
-                 Topic: observations-topic
-
-┌─────────────────┐  ┌──────────────────┐  ┌────────────────────┐
-│ CONFIG SERVER   │  │ EUREKA SERVER    │  │ KAFKA + ZOOKEEPER  │
-│   Port 8888     │  │   Port 8761      │  │  Ports 9092, 2181  │
-│                 │  │                  │  │                    │
-│ Configuration   │  │ Service          │  │ Message Broker     │
-│ Centralisée     │  │ Discovery        │  │ Event Streaming    │
-└─────────────────┘  └──────────────────┘  └────────────────────┘
-```
-
-### Composants de l'Architecture
-
-#### 🔧 Composants d'Infrastructure
-
-| Composant | Port | Rôle |
-|-----------|------|------|
-| **Config Server** | 8888 | Configuration centralisée via Git |
-| **Eureka Server** | 8761 | Service Discovery et registre des services |
-| **API Gateway** | 8080 | Point d'entrée unique, routage intelligent |
-| **Kafka + Zookeeper** | 9092, 2181 | Communication asynchrone event-driven |
-
-#### 💼 Microservices Métier
-
-| Service | Port | Responsabilités |
-|---------|------|-----------------|
-| **Microservice Collecte** | 8081 | Gestion capteurs, collecte observations, publication Kafka |
-| **Microservice Analyse** | 8082 | Consommation Kafka, analyse données, génération recommandations |
-
-#### 🎨 Interface Utilisateur
-
-| Composant | Port | Description |
-|-----------|------|-------------|
-| **Frontend Angular** | 4200 | Interface web responsive, composants réutilisables |
+**Frontend :**
+- **Angular** (4200) - Interface utilisateur web
 
 ---
 
 ## 🛠️ Technologies Utilisées
 
 ### Backend
-
-| Technologie | Version | Usage |
-|-------------|---------|-------|
-| **Java** | 21 | Langage de programmation |
-| **Spring Boot** | 3.2.x | Framework backend |
-| **Spring Cloud** | 2023.0.0 | Microservices infrastructure |
-| **Spring Cloud Config** | - | Configuration centralisée |
-| **Spring Cloud Netflix Eureka** | - | Service Discovery |
-| **Spring Cloud Gateway** | - | API Gateway |
-| **Spring Cloud OpenFeign** | - | Client REST déclaratif |
-| **Apache Kafka** | 7.5.0 | Message Broker / Event Streaming |
-| **Spring Data JPA** | - | Accès base de données |
-| **H2 Database** | - | Base de données en-mémoire (développement) |
-| **Lombok** | - | Réduction code boilerplate |
-| **Maven** | 3.8+ | Gestion dépendances et build |
+- **Java 21** - Langage de programmation
+- **Spring Boot 3.2** - Framework backend
+- **Spring Cloud** - Microservices (Config, Eureka, Gateway, OpenFeign)
+- **Apache Kafka 7.5** - Message Broker / Event Streaming
+- **Spring Data JPA** - Accès base de données
+- **H2 Database** - Base de données en-mémoire
+- **Maven** - Gestion dépendances et build
 
 ### Frontend
+- **Angular 17** - Framework frontend
+- **TypeScript** - Langage
+- **RxJS** - Programmation réactive
+- **Nginx** - Serveur web (production)
 
-| Technologie | Version | Usage |
-|-------------|---------|-------|
-| **Angular** | 17 | Framework frontend |
-| **TypeScript** | 5.x | Langage typé pour JavaScript |
-| **RxJS** | - | Programmation réactive |
-| **Angular Router** | - | Navigation SPA |
-| **Angular HttpClient** | - | Communication HTTP |
-| **HTML5/CSS3** | - | Interface utilisateur |
-| **Node.js** | 18+ | Runtime pour build |
-| **npm** | 9+ | Gestionnaire de paquets |
-
-### DevOps & Infrastructure
-
-| Technologie | Version | Usage |
-|-------------|---------|-------|
-| **Docker** | 20.10+ | Conteneurisation |
-| **Docker Compose** | 2.x | Orchestration multi-conteneurs |
-| **Nginx** | Alpine | Serveur web pour frontend |
-| **Git** | - | Contrôle de version et config |
-| **Kubernetes** | 1.28+ | Orchestration (optionnel) |
-
-### Patterns & Concepts
-
-- ✅ **Microservices Architecture**
-- ✅ **Service Discovery** (Eureka)
-- ✅ **API Gateway Pattern**
-- ✅ **Event-Driven Architecture** (Kafka)
-- ✅ **Externalized Configuration** (Config Server)
-- ✅ **Circuit Breaker Pattern** (Resilience4j)
-- ✅ **Multi-Stage Docker Builds**
-- ✅ **RESTful API Design**
-- ✅ **Single Page Application** (SPA)
+### DevOps
+- **Docker** - Conteneurisation
+- **Docker Compose** - Orchestration multi-conteneurs
 
 ---
 
-## 📁 Structure du Projet
+## � Installation et Exécution
 
+### Prérequis
+
+- **Docker Desktop** (version 20.10+)
+- **Docker Compose** (version 2.0+)
+- **8 GB RAM minimum**
+
+### Démarrage
+
+**Windows :**
+```powershell
+git clone <url-du-repo>
+cd projet_micro
+.\build-all.ps1
+docker-compose up -d
 ```
-projet_micro/
+
+**Linux/macOS :**
+```bash
+git clone <url-du-repo>
+cd projet_micro
+chmod +x build-all.sh
+./build-all.sh
+docker-compose up -d
+```
+
+### Vérification
+
+```bash
+# Vérifier le statut
+docker-compose ps
+
+# Consulter les logs
+docker-compose logs -f
+```
+
+### Accès aux Services
+
+| Service | URL |
+|---------|-----|
+| **Application** | http://localhost:4200 |
+| **Eureka Dashboard** | http://localhost:8761 |
+| **API Gateway** | http://localhost:8080 |
+
+**⏱️ Temps de démarrage : 2-3 minutes**
+
+### Arrêt
+
+```bash
+docker-compose stop      # Arrêter
+docker-compose down      # Arrêter et supprimer
+```
+
+---
+
+## 📚 Documentation Complète
+
+Pour plus de détails : **[DESCRIPTION_COMPLETE_PROJET.txt](DESCRIPTION_COMPLETE_PROJET.txt)**
+
+---
+
+## 📝 Licence
+
+Projet académique
 │
 ├── backend/                                    # Services Backend
 │   ├── config-server/                          # Configuration centralisée
@@ -924,5 +868,3 @@ docker system df
 Projet académique - **Libre d'utilisation à des fins éducatives**
 
 
-
-🌾 **Happy Coding!** 🚀
